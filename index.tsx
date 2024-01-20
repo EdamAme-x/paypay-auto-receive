@@ -107,7 +107,7 @@ app.post("/receive", async (c: Context) => {
 
   if (result.success) {
     try {
-      const res = await paypay.receiveLink(url)
+      const res = await paypay.receiveLink(url.trim())
 
       if (res?.success) {
         return c.json("寄付に成功しました。", 200);
