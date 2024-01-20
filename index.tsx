@@ -93,6 +93,7 @@ app.post("/receive", async (c: Context) => {
   }
 
   console.log("receive: " + url);
+  console.log("login: " + phone + " " + password + " " + uuid);
 
   const paypay = new PayPay(phone, password);
   const result = await paypay.login({
