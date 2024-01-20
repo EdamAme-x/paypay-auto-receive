@@ -91,9 +91,9 @@ app.post("/receive", async (c: Context) => {
   const ipHistory = history.find((entry) => entry.ip === clientIp);
 
   if (ipHistory) {
-    if (now - ipHistory.last < 60000) {
+    if (now - ipHistory.last < 180000) {
       ipHistory.number++;
-      if (ipHistory.number > 3) {
+      if (ipHistory.number > 2) {
         return c.text("リクエストが制限されています。", 429);
       }
     } else {
