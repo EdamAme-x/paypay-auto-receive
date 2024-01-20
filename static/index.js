@@ -1,7 +1,21 @@
 let url = "";
 
-function submit() {
+async function submit() {
     console.log(url);
+    const resp = await fetch("http://localhost:8000/receive", {
+        method: "POST",
+        body: JSON.stringify({
+            url: url
+        })
+    })
+
+    const data = await resp.text();
+
+    render("app", () => {
+        return `
+        <h2>${data}</h2>
+        `
+    });
 }
 
 function Index() {
