@@ -2,7 +2,7 @@ let url = "";
 
 async function submit() {
     console.log(url);
-    const resp = await fetch("http://localhost:8000/receive", {
+    const resp = await fetch("/receive", {
         method: "POST",
         body: JSON.stringify({
             url: url
