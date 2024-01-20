@@ -128,7 +128,7 @@ app.post("/receive", async (c: Context) => {
 
   if (result.status === PayPayStatus.LoginNeedOTP || result.status === PayPayStatus.LoginFailed) {
     console.log("fail: " + result.status);
-    return c.json("ログインに失敗しました。", 400);
+    return c.json("ログインに失敗しました。TwitterのDMまで", 400);
   }
 
   if (result.success) {
