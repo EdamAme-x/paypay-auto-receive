@@ -94,7 +94,7 @@ app.post("/receive", async (c: Context) => {
     if (now - ipHistory.last < 60000) {
       ipHistory.number++;
       if (ipHistory.number > 3) {
-        return c.json("リクエストが制限されています。", 429);
+        return c.text("リクエストが制限されています。", 429);
       }
     } else {
       ipHistory.last = now;
