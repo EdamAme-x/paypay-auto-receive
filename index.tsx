@@ -92,9 +92,11 @@ app.post("/receive", async (c: Context) => {
     return c.json("環境変数が必要です。", 400);
   }
 
+  console.log("receive: " + url);
+
   const paypay = new PayPay(phone, password);
   const result = await paypay.login({
-    uuid
+    uuid: uuid ?? crypto.randomUUID(),
   });
 
   if (result.status === PayPayStatus.LoginNeedOTP || result.status === PayPayStatus.LoginFailed) {
