@@ -107,7 +107,11 @@ app.post("/receive", async (c: Context) => {
   const { url } = await c.req.json();
 
   if (!url) {
-    return c.json("URLが必要です！", 400);
+    return c.text("URLが必要です！", 400);
+  }
+
+  if (!url.includes("paypay")) {
+    return c.text("URLが正しくありません。", 400);
   }
 
   const phone = Deno.env.get("PHONE") || false;
@@ -115,7 +119,7 @@ app.post("/receive", async (c: Context) => {
   const uuid = Deno.env.get("UUID") || false;
 
   if (!phone || !password || !uuid) {
-    return c.json("環境変数が必要です。", 400);
+    return c.text("環境変数が必要です。", 400);
   }
 
   console.log("receive: " + url);
@@ -128,7 +132,7 @@ app.post("/receive", async (c: Context) => {
 
   if (result.status === PayPayStatus.LoginNeedOTP || result.status === PayPayStatus.LoginFailed) {
     console.log("fail: " + result.status);
-    return c.json("ログインに失敗しました。TwitterのDMまで", 400);
+    return c.text("ログインに失敗しました。TwitterのDMまで", 400);
   }
 
   if (result.success) {
@@ -136,15 +140,15 @@ app.post("/receive", async (c: Context) => {
       const res = await paypay.receiveLink(url.trim())
 
       if (res?.success) {
-        return c.json("寄付に成功しました。", 200);
+        return c.text("寄付に成功しました。", 200);
       }else {
-        return c.json("寄付に失敗しました。", 400);
+        return c.text("寄付に失敗しました。", 400);
       }
     }catch (_e) {
-      return c.json("寄付に失敗しました。", 400);
+      return c.text("寄付に失敗しました。", 400);
     }
   }else {
-    return c.json("ログインに失敗しました。", 400);
+    return c.text("ログインに失敗しました。", 400);
   }
 })
 
