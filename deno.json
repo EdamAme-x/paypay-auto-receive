@@ -1,0 +1,15 @@
+{
+    "tasks": {
+        "start": "deno run -A --unstable ./index.tsx",
+        "dev": "deno run -A --unstable --watch ./index.tsx",
+        "test": "deno test",
+        "lint": "deno lint",
+        "format": "deno fmt"
+    },
+    "imports": {
+        "hono": "https://deno.land/x/hono@v3.12.6/mod.ts",
+        "hono/": "https://deno.land/x/hono@v3.12.6/",
+        "envLoader": "https://deno.land/x/dotenv@v3.2.0/load.ts",
+        "paypax": "https://deno.land/x/paypax/mod.ts"
+    }
+}
