@@ -8,6 +8,12 @@ import { PayPay } from "https://deno.land/x/paypax@v1.5.4/mod.ts";
 import "envLoader";
 import { PayPayStatus } from 'paypax';
 
+const history: {
+  ip: string,
+  last: number,
+  number: number
+}[] = [];
+
 const app = new Hono();
 
 app.use("/", async (c: Context, next: Next) => {
@@ -79,7 +85,27 @@ app.get("/", (c: Context) => {
 })
 
 app.post("/receive", async (c: Context) => {
+  const clientIp = c.env.ip || (c.req.headers.get("x-forwarded-for") || c.req.headers.get("x-real-ip") || "unknown").split(",")[0].trim();
+
+  const now = Date.now();
+  const ipHistory = history.find((entry) => entry.ip === clientIp);
+
+  if (ipHistory) {
+    if (now - ipHistory.last < 60000) {
+      ipHistory.number++;
+      if (ipHistory.number > 3) {
+        return c.json("リクエストが制限されています。", 429);
+      }
+    } else {
+      ipHistory.last = now;
+      ipHistory.number = 1;
+    }
+  } else {
+    history.push({ ip: clientIp, last: now, number: 1 });
+  }
+
   const { url } = await c.req.json();
+
   if (!url) {
     return c.json("URLが必要です！", 400);
   }
@@ -126,4 +152,8 @@ app.get("/*", serveStatic({
   root: "./static",
 }));
 
-Deno.serve(app.fetch);
+Deno.serve((req, connInfo) => {
+  return app.fetch(req, {
+    ip: connInfo.remoteAddr?.toString(),
+  })
+});
